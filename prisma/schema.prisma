@@ -1,0 +1,20 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model WasSession {
+  id           String   @id
+  displayName  String?
+  ownerPhone   String? // +51...
+  status       String   @default("inactive") // inactive | waiting_qr | connected
+  authSnapshot Bytes? // zip/base64 del folder auth (backup)
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+}

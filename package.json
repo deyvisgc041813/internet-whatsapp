@@ -1,0 +1,31 @@
+{
+  "name": "internet-whatsapp-actualizado",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.18.0",
+    "@whiskeysockets/baileys": "^7.0.0-rc.6",
+    "baileys": "github:WhiskeySockets/Baileys",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "mysql2": "^3.15.3",
+    "pino": "^10.1.0",
+    "pino-pretty": "^13.1.2",
+    "prisma": "^6.18.0",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.1",
+    "ws": "^8.17.1"
+  }
+}

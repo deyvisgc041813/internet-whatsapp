@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ignore": ["auth/*", "prisma/*", "node_modules/*"],
+  "ext": "js,json",
+  "exec": "node src/server.js"
+}
