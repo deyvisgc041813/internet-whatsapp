@@ -9,7 +9,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 8001,
-        DATABASE_URL: 'mysql://internet:internet@localhost:3306/wa_sessions',
+        DATABASE_URL: 'mysql://root:root@localhost:3306/wa_sessions',
         PRISMA_CLIENT_ENGINE_TYPE: 'binary',
       },
       out_file: './logs/out.log',   // logs estándar

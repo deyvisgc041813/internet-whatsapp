@@ -11,11 +11,17 @@ export default function sessionsRoutesFactory(manager) {
   /**
    * 📲 Iniciar o verificar una sesión
    */
-  router.post('/start/:sessionId', async (req, res) => {
-    const { sessionId } = req.params;
-
+  router.post('/start/', async (req, res) => {
+    const { sessionId } = req.body;
     try {
       // 1️⃣ Verificar si ya existe una sesión activa
+      if(!sessionId) {
+        return res.json({
+          ok: false,
+          qr: false,
+          message: 'No se envió el sessionId. Este campo es obligatorio para configurar WhatsApp.'
+        });
+      }
       const existing = getSessionSock(sessionId);
       if (existing) {
         return res.json({
@@ -24,7 +30,6 @@ export default function sessionsRoutesFactory(manager) {
           message: `✅ La sesión '${sessionId}' ya está activa`,
         });
       }
-
       // 2️⃣ Crear una nueva sesión y emitir QR
       const client = await createBaileysClient({
         sessionId,
@@ -35,7 +40,6 @@ export default function sessionsRoutesFactory(manager) {
 
       // 3️⃣ Registrar el socket en el SessionManager
       setSessionSock(sessionId, client);
-
       res.json({
         ok: true,
         qr: true,
@@ -47,7 +51,7 @@ export default function sessionsRoutesFactory(manager) {
         ok: false,
         qr: false,
         error: 'Error al iniciar la sesión',
-        details: err.message,
+        message: err.message,
       });
     }
   });
