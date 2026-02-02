@@ -35,12 +35,12 @@ export async function restoreAuthFromDB(sessionId, authDir) {
   }
 }
 
-export async function backupAuthToDB(sessionId, authDir) {
+export async function backupAuthToDB(sessionId, authDir, status) {
   if (!fs.existsSync(authDir)) return;
   const buf = zipFolderToBuffer(authDir);
   await prisma.wasSession.upsert({
     where: { id: sessionId },
-    create: { id: sessionId, status: 'inactive', authSnapshot: buf },
+    create: { id: sessionId, status, authSnapshot: buf },
     update: { authSnapshot: buf, updatedAt: new Date() },
   });
 }
