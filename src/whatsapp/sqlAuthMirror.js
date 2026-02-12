@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import zlib from 'zlib';
-import { prisma } from '../db/pool.js';
+import prisma from '../db/pool.js';
 
 function zipFolderToBuffer(dir) {
   const files = [];

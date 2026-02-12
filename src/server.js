@@ -4,8 +4,9 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { initSocket } from './socket.js';
 import sessionsRoutesFactory from './routes/sessions.routes.js';
-import messagesRoutes from './routes/messages.routes.js'; // ✅ Import directo
-
+import messagesRoutes from './routes/messages.routes.js';
+import authRoutes from './routes/auth.routes.js';
+import { authMiddleware } from "./middleware/auth.middleware.js"
 dotenv.config();
 
 const app = express();
@@ -30,7 +31,7 @@ const allowedOrigins = [
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, origin); // 👈 devuelve el origin real
+      callback(null, origin); // devuelve el origin real
     } else {
       callback(new Error('Not allowed by CORS'));
     }
@@ -49,10 +50,9 @@ const manager = {
 	authBase
 }
 
-// ✅ Rutas
-app.use('/api/v1/sessions', sessionsRoutesFactory(manager));
-app.use('/api/v1/messages', messagesRoutes); // 👈 Aquí pasas el router directamente
+app.use('/api/v1/sessions', authMiddleware, sessionsRoutesFactory(manager));
+app.use('/api/v1/messages', authMiddleware, messagesRoutes); 
+app.use('/api/v1/auth', authRoutes);
 
-// ✅ Servidor activo
 const PORT = process.env.PORT || 8001;
-server.listen(PORT, () => console.log(`🚀 Servidor en http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Servidor en http://localhost:${PORT}`));

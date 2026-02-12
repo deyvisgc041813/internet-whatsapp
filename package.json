@@ -14,11 +14,13 @@
     "@prisma/client": "^6.18.0",
     "@whiskeysockets/baileys": "^7.0.0-rc.6",
     "baileys": "github:WhiskeySockets/Baileys",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
     "multer": "^2.0.2",
     "mysql2": "^3.15.3",
     "pino": "^10.1.0",
@@ -29,6 +31,8 @@
     "ws": "^8.17.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "nodemon": "^3.1.11"
   }
 }

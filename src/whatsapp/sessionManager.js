@@ -11,7 +11,7 @@ import makeWASocket, { useMultiFileAuthState } from "baileys";
 const sessions = new Map();
 
 /**
- * ✅ Registrar una nueva sesión
+ * Registrar una nueva sesión
  * @param {string} sessionId - ID único de la sesión (por ejemplo "localhost")
  * @param {object} sock - Instancia del socket de Baileys (makeWASocket)
  */

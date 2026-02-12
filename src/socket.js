@@ -33,10 +33,10 @@ export function initSocket(server, allowedOrigins) {
   });
 
   io.on('connection', (socket) => {
-    console.log(`🟢 Cliente conectado al socket: ${socket.id}`);
+    console.log(`Cliente conectado al socket: ${socket.id}`);
 
     socket.on('disconnect', (reason) => {
-      console.log(`🔴 Cliente desconectado (${socket.id}) -> ${reason}`);
+      console.log(`Cliente desconectado (${socket.id}) -> ${reason}`);
     });
   });
 
