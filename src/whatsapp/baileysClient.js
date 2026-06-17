@@ -31,7 +31,7 @@ export async function createBaileysClient({
     const sock = makeWASocket({
       version,
       auth: state,
-      printQRInTerminal: false,
+      //printQRInTerminal: false,
       browser: ["Windows", "Edge", "120.0.0.0"],
       connectTimeoutMs: 60000,
     });
@@ -45,14 +45,6 @@ export async function createBaileysClient({
     // Evento principal de conexión
     sock.ev.on("connection.update", async (update) => {
       const { connection, lastDisconnect, qr } = update;
-
-      // 🔹 Emitir QR al cliente
-      // if (qr) {
-      //   const qrBase64 = await qrcode.toDataURL(qr);
-      //   io?.emit(`qr-${sessionId}`, qrBase64);
-      //   onStatus?.('waiting_qr');
-      //   logger.info({ sessionId }, '📲 QR emitido al cliente');
-      // }
 
       if (qr && !isConnected) {
         const qrBase64 = await qrcode.toDataURL(qr);
@@ -68,7 +60,6 @@ export async function createBaileysClient({
         onStatus?.("connected");
         logger.info({ sessionId }, "Sesión conectada");
         await backupAuthToDB(sessionId, authDir, "Active");
-        //sock.ev.removeAllListeners('connection.update'); // Evita que Baileys siga mandando QR fantasmas.
       }
 
       // 🔹 Sesión cerrada
