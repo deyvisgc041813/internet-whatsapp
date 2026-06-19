@@ -262,6 +262,45 @@ async function createSocket(sessionId, entry, manager = {}) {
     /**
      * WhatsApp cerró conexión.
      */
+    // if (connection === "close") {
+    //   const statusCode = new Boom(lastDisconnect?.error)?.output?.statusCode;
+
+    //   console.log(`[WS CLOSE] ${sessionId} | code: ${statusCode}`);
+
+    //   entry.sock = null;
+    //   entry.creatingPromise = null;
+    //   entry.reconnecting = false;
+    //   //destroyedSessions.add(sessionId);
+    //   if (statusCode === 405) {
+    //     entry.status = "error_405";
+    //     removeSessionSock(sessionId, authPath);
+    //     console.log(`[WS] ${sessionId} -> error_405 (no retry)`);
+    //     //return;
+    //   }
+
+    //   if (statusCode === DisconnectReason.loggedOut) {
+    //     entry.status = "logged_out";
+    //     removeSessionSock(sessionId, authPath);
+    //     console.log(`[WS] ${sessionId} -> logged_out (no retry)`);
+    //     //return;
+    //   }
+
+    //   if (statusCode === 401) {
+    //     entry.status = "error_401";
+    //     removeSessionSock(sessionId, authPath);
+    //     console.log(`[WS] ${sessionId} -> error_401 (no retry)`);
+    //     //return;
+    //   }
+
+    //   entry.status = "close";
+
+    //   console.log(`[WS] ${sessionId} -> close (reconnect allowed)`);
+
+    //   manager.io?.emit(`session-inactive-${sessionId}`, {
+    //     sessionId,
+    //     status: "close",
+    //   });
+    // }
     if (connection === "close") {
       const statusCode = new Boom(lastDisconnect?.error)?.output?.statusCode;
 
@@ -270,35 +309,36 @@ async function createSocket(sessionId, entry, manager = {}) {
       entry.sock = null;
       entry.creatingPromise = null;
       entry.reconnecting = false;
-      //destroyedSessions.add(sessionId);
+
+      let finalStatus = "close";
+      let allowReconnect = true;
+
       if (statusCode === 405) {
-        entry.status = "error_405";
+        finalStatus = "error_405";
+        allowReconnect = false;
         removeSessionSock(sessionId, authPath);
         console.log(`[WS] ${sessionId} -> error_405 (no retry)`);
-        return;
-      }
-
-      if (statusCode === DisconnectReason.loggedOut) {
-        entry.status = "logged_out";
+      } else if (statusCode === DisconnectReason.loggedOut) {
+        finalStatus = "logged_out";
+        allowReconnect = false;
         removeSessionSock(sessionId, authPath);
         console.log(`[WS] ${sessionId} -> logged_out (no retry)`);
-        return;
-      }
-
-      if (statusCode === 401) {
-        entry.status = "error_401";
+      } else if (statusCode === 401) {
+        finalStatus = "error_401";
+        allowReconnect = false;
         removeSessionSock(sessionId, authPath);
         console.log(`[WS] ${sessionId} -> error_401 (no retry)`);
-        return;
       }
 
-      entry.status = "close";
+      entry.status = finalStatus;
 
-      console.log(`[WS] ${sessionId} -> close (reconnect allowed)`);
+      console.log(
+        `[WS] ${sessionId} -> ${finalStatus} (${allowReconnect ? "reconnect allowed" : "no retry"})`,
+      );
 
       manager.io?.emit(`session-inactive-${sessionId}`, {
         sessionId,
-        status: "close",
+        status: finalStatus,
       });
     }
   });
@@ -458,7 +498,7 @@ export function removeSessionSock(sessionId, authPath) {
       console.warn(`Error cerrando sesión ${sessionId}:`, error.message);
     }
   }
- try {
+  try {
     fs.rmSync(authPath, { recursive: true, force: true });
     console.log("sesión eliminada completamente:", sessionId);
   } catch (e) {
